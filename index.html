@@ -31,15 +31,17 @@
   #loader .hint{margin-top:1rem;font-size:.85rem;opacity:.8;text-align:center;padding:0 1rem}
 
   /* HUD top */
-  #hud-top{position:absolute;top:0;left:0;right:0;padding:.6rem .7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;pointer-events:none;z-index:10}
-  .stat-pill{background:var(--c-paper);border:3px solid var(--c-ink);border-radius:14px;padding:.35rem .7rem;box-shadow:var(--shadow);font-weight:900;font-size:clamp(.85rem,3.5vw,1.05rem);display:flex;align-items:center;gap:.4rem;pointer-events:auto}
+  #hud-top{position:absolute;top:0;left:0;right:0;padding:.6rem .7rem;display:flex;justify-content:space-between;align-items:flex-start;gap:.4rem;pointer-events:none;z-index:10;flex-wrap:wrap;box-sizing:border-box}
+  .stat-pill{background:var(--c-paper);border:3px solid var(--c-ink);border-radius:14px;padding:.35rem .7rem;box-shadow:var(--shadow);font-weight:900;font-size:clamp(.85rem,3.5vw,1.05rem);display:flex;align-items:center;gap:.4rem;pointer-events:auto;max-width:100%;box-sizing:border-box}
   .stat-pill .ico{font-size:1.15rem}
   .stat-pill small{font-weight:700;opacity:.7;font-size:.7rem;display:block;line-height:1}
   #level-pill{display:flex;flex-direction:column;gap:.15rem;min-width:120px}
   .xpbar{height:7px;background:rgba(0,0,0,.12);border-radius:99px;overflow:hidden;margin-top:2px}
   .xpbar>div{height:100%;background:linear-gradient(90deg,var(--c-green),#7af0a8);border-radius:99px;width:0;transition:width .5s}
   #weather-pill .ico{font-size:1.25rem}
-  #top-right{display:flex;flex-direction:column;gap:.4rem;align-items:flex-end}
+  #top-right{display:flex;flex-direction:column;gap:.4rem;align-items:flex-end;max-width:60vw}
+  /* HUD middle cluster: coins + cooler pills grouped together */
+  #hud-mid{display:flex;gap:.4rem;align-items:center}
 
   /* menu buttons */
   .menu-btn{pointer-events:auto;background:var(--c-paper);border:3px solid var(--c-ink);border-radius:14px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;box-shadow:var(--shadow);cursor:pointer;transition:transform .08s}
@@ -161,12 +163,24 @@
 
   /* responsive */
   @media (max-width:480px){
-    #hud-top{padding:.4rem}
-    .stat-pill{font-size:.8rem;padding:.3rem .5rem}
-    #level-pill{min-width:90px}
+    #hud-top{padding:.35rem .4rem;gap:.3rem;flex-wrap:wrap}
+    .stat-pill{font-size:.75rem;padding:.25rem .45rem;gap:.25rem;border-width:2px;border-radius:11px}
+    .stat-pill .ico{font-size:.95rem}
+    #level-pill{min-width:84px;flex:1 1 84px}
+    #level-pill small{font-size:.6rem}
+    .xpbar{height:5px}
+    #hud-mid{gap:.3rem;flex:1 1 auto;justify-content:center}
+    #top-right{flex:1 1 100%;align-items:stretch;flex-direction:row;gap:.3rem;max-width:100%}
+    #top-right .stat-pill{flex:1 1 0;justify-content:center}
     .menu-btn{width:40px;height:40px;font-size:1.15rem}
-    #menu-grid{top:120px;right:.4rem}
+    #menu-grid{top:auto;bottom:.5rem;right:.4rem;gap:.35rem;flex-direction:column-reverse}
     .big-btn{padding:.75rem 1.2rem;min-width:120px}
+  }
+  @media (max-width:380px){
+    /* very narrow phones: collapse time-weather to icons only, hide weather word */
+    #time-weather-pill #time-val, #time-weather-pill #weather-val{display:none}
+    #time-weather-pill #weather-ico{margin-left:-.15rem}
+    #map-pill #map-val{font-size:.7rem}
   }
   @media (orientation:portrait) and (min-width:481px){
     .big-btn{padding:1rem 2rem}
@@ -225,13 +239,15 @@
       <div class="xpbar"><div id="xp-fill"></div></div>
       <small><span id="xp-val">0</span>/<span id="xp-max">100</span> XP</small>
     </div>
-    <div class="stat-pill" style="background:linear-gradient(180deg,#ffe88a,#ffcf3f)">
-      <span class="ico">🪙</span><span id="coin-val">0</span>
+    <div id="hud-mid">
+      <div class="stat-pill" style="background:linear-gradient(180deg,#ffe88a,#ffcf3f)">
+        <span class="ico">🪙</span><span id="coin-val">0</span>
+      </div>
+      <!-- FITUR 3: cooler capacity pill + sell button -->
+      <button id="cooler-pill" class="stat-pill" style="background:linear-gradient(180deg,#c8f0d8,#8ad8b0);cursor:pointer;border:none" title="Jual isi cooler di harga pasar">
+        <span class="ico">🪣</span><span id="cooler-val">0/10</span>
+      </button>
     </div>
-    <!-- FITUR 3: cooler capacity pill + sell button -->
-    <button id="cooler-pill" class="stat-pill" style="background:linear-gradient(180deg,#c8f0d8,#8ad8b0);cursor:pointer;border:none" title="Jual isi cooler di harga pasar">
-      <span class="ico">🪣</span><span id="cooler-val">0/10</span>
-    </button>
     <div id="top-right">
       <div id="time-weather-pill" class="stat-pill" style="background:linear-gradient(180deg,#c8d8ff,#8aa8e0);color:#1a2a4a"><span class="ico" id="time-ico">🕛</span><span id="time-val">Siang</span><span style="opacity:.5">·</span><span class="ico" id="weather-ico">☀️</span><span id="weather-val">Cerah</span></div>
       <div id="map-pill" class="stat-pill" style="background:linear-gradient(180deg,#ffe88a,#ffcf3f);cursor:pointer"><span class="ico" id="map-ico">🏖️</span><span id="map-val">Pantai</span></div>
